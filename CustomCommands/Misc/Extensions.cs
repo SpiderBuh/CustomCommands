@@ -6,6 +6,7 @@ using RemoteAdmin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Utils;
@@ -90,4 +91,18 @@ namespace CustomCommands
 			return role == RoleTypeId.Scp173 || role == RoleTypeId.Scp049 || role == RoleTypeId.Scp079 || role == RoleTypeId.Scp096 || role == RoleTypeId.Scp106 || role == RoleTypeId.Scp939;
 		}
 	}
+    public static void ScalePlayer(Player p, float s) => ScalePlayer(p, s, s, s);
+    public static void ScalePlayer(Player p, float xz, float y) => ScalePlayer(p, xz, y, xz);
+    public static void ScalePlayer(Player p, float x, float y, float z)
+    {
+        var nId = p.ReferenceHub.networkIdentity;
+        p.ReferenceHub.gameObject.transform.localScale = new UnityEngine.Vector3(1 * x, 1 * y, 1 * z);
+
+        foreach (var player in Server.GetPlayers())
+        {
+            NetworkConnection nConn = player.ReferenceHub.connectionToClient;
+
+            typeof(NetworkServer).GetMethod("SendSpawnMessage", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { nId, nConn });
+        }
+    }
 }
