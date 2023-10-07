@@ -25,8 +25,9 @@ namespace CustomCommands
 
 		Infection = 1,
 		Battle = 2,
-		Hush = 3
-	}
+		Hush = 3,
+		NutJar = 4
+    }
 	public enum VoteType
 	{
 		NONE = 0,

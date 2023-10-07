@@ -31,11 +31,14 @@ namespace CustomCommands.Commands.Events
                 if (!sender.CanRun(this, arguments, out response, out var players, out var pSender))
                     return false;
 
+                var svrPlrs = Server.GetPlayers();
+
                 foreach (var plr in Player.GetPlayers().Where(p => p.IsSCP))
                 {
                     plr.SetRole(RoleTypeId.Scp173);
-                    ScalePlayer(plr, UnityEngine.Random.Range(0.4f, 0.7f), UnityEngine.Random.Range(0.4f, 0.7f), UnityEngine.Random.Range(0.4f, 0.7f));
+                    ScalePlayer(plr, UnityEngine.Random.Range(0.5f, 0.75f), UnityEngine.Random.Range(0.5f, 0.75f), UnityEngine.Random.Range(0.5f, 0.75f), svrPlrs);
                 }
+                Plugin.CurrentEvent = EventType.NutJar;
                 Cassie.Message("pitch_1.25 here they come");
                 response = "The NutJar event round has begun";
                 return true;

@@ -15,7 +15,7 @@ namespace CustomCommands
 {
 	public static class Extensions
 	{
-		public static bool CanRun(this ICommandSender sender, ICustomCommand cmd, ArraySegment<string> args, out string Response, out List<Player> Players, out PlayerCommandSender pSender)
+		public static bool CanRun(this ICommandSender sender, ICustomCommand cmd, ArraySegment<string> args, out string Response, out List<Player> Players, out PlayerCommandSender pSender, byte optArgs = 0)
 		{
 			Players = new List<Player>();
 			pSender = null;
@@ -36,7 +36,7 @@ namespace CustomCommands
 				return false;
 			}
 
-			if (args.Count < cmd.Usage.Length)
+			if (args.Count < cmd.Usage.Length - optArgs)
 			{
 				Response = $"Missing argument: {cmd.Usage[args.Count]}";
 				return false;
@@ -90,17 +90,18 @@ namespace CustomCommands
 		{
 			return role == RoleTypeId.Scp173 || role == RoleTypeId.Scp049 || role == RoleTypeId.Scp079 || role == RoleTypeId.Scp096 || role == RoleTypeId.Scp106 || role == RoleTypeId.Scp939;
 		}
-	}
-    public static void ScalePlayer(Player p, float s) => ScalePlayer(p, s, s, s);
-    public static void ScalePlayer(Player p, float xz, float y) => ScalePlayer(p, xz, y, xz);
-    public static void ScalePlayer(Player p, float x, float y, float z)
-    {
-        var nId = p.ReferenceHub.networkIdentity;
-        p.ReferenceHub.gameObject.transform.localScale = new UnityEngine.Vector3(1 * x, 1 * y, 1 * z);
 
-        foreach (var player in Server.GetPlayers())
+        public static void ScalePlayer(Player p, float s = 1) => ScalePlayer(p, s, s, s);
+        public static void ScalePlayer(Player p, float xz, float y) => ScalePlayer(p, xz, y, xz);
+        public static void ScalePlayer(Player p, float x, float y, float z) => ScalePlayer(p, x, y, z, Server.GetPlayers());
+        public static void ScalePlayer(Player p, float x, float y, float z, List<Player> svrPlrs)
         {
-            NetworkConnection nConn = player.ReferenceHub.connectionToClient;
+            var nId = p.ReferenceHub.networkIdentity;
+            p.ReferenceHub.gameObject.transform.localScale = new UnityEngine.Vector3(1 * x, 1 * y, 1 * z);
+
+            foreach (var player in Server.GetPlayers())
+            {
+                NetworkConnection nConn = player.ReferenceHub.connectionToClient;
 
             typeof(NetworkServer).GetMethod("SendSpawnMessage", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { nId, nConn });
         }
