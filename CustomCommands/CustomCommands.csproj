@@ -113,6 +113,7 @@
     <Compile Include="Commands\Grenade\Grenade.cs" />
     <Compile Include="Commands\Grenade\Ball.cs" />
     <Compile Include="Commands\Player\Drop.cs" />
+    <Compile Include="Commands\Player\ForceRagdoll.cs" />
     <Compile Include="Commands\Teleport\Pocket.cs" />
     <Compile Include="Commands\Size.cs" />
     <Compile Include="Commands\Teleport\SendToPlayer.cs" />
